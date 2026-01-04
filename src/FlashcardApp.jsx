@@ -304,6 +304,23 @@ const FlashcardApp = () => {
     setShowVisual(false);
   }, [mode]);
 
+  // Helper function to convert question to speech-friendly text
+  const getSpokenQuestion = (fact) => {
+    const [a, b] = fact.operands;
+    switch(fact.operation) {
+      case 'add':
+        return `${a} plus ${b}`;
+      case 'subtract':
+        return `${a} minus ${b}`;
+      case 'multiply':
+        return `${a} times ${b}`;
+      case 'divide':
+        return `${a} divided by ${b}`;
+      default:
+        return fact.question;
+    }
+  };
+
   // Auto-play audio when card changes or flips
   useEffect(() => {
     if (audioEnabled && deck.length > 0) {
@@ -312,7 +329,7 @@ const FlashcardApp = () => {
         if (isFlipped) {
           speak(`The answer is ${currentFact.answer}`);
         } else {
-          speak(`What is ${currentFact.question}?`);
+          speak(`What is ${getSpokenQuestion(currentFact)}?`);
         }
       }
     }
@@ -347,7 +364,7 @@ const FlashcardApp = () => {
     setShowVisual(!showVisual);
     if (!showVisual && audioEnabled && deck[currentIndex]) {
       const fact = deck[currentIndex];
-      speak(`${fact.question} equals ${fact.answer}`);
+      speak(`${getSpokenQuestion(fact)} equals ${fact.answer}`);
     }
   };
 
