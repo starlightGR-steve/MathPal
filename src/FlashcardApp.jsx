@@ -257,20 +257,15 @@ const Visualizer = ({ visual }) => {
         const containerClass = getContainerSizeClass(v2);
 
         return (
-          <div className="flex flex-col items-center gap-6">
-            <div className="flex flex-wrap justify-center gap-4">
-              {Array.from({ length: v1 }).map((_, i) => (
-                <div key={i} className="flex flex-col items-center gap-2">
-                  <div className={`flex flex-wrap justify-center ${containerClass} p-4 bg-amber-100 border-4 border-amber-600 rounded-lg min-w-[100px]`}>
-                    {renderApples(v2)}
-                  </div>
-                  <div className="text-2xl font-bold text-gray-700">{v2}</div>
+          <div className="flex flex-wrap justify-center gap-4">
+            {Array.from({ length: v1 }).map((_, i) => (
+              <div key={i} className="flex flex-col items-center gap-2">
+                <div className={`flex flex-wrap justify-center ${containerClass} p-4 bg-amber-100 border-4 border-amber-600 rounded-lg min-w-[100px]`}>
+                  {renderApples(v2)}
                 </div>
-              ))}
-            </div>
-            <div className="text-3xl font-bold text-emerald-600">
-              {v1} groups of {v2} = {totalCount}
-            </div>
+                <div className="text-2xl font-bold text-gray-700">{v2}</div>
+              </div>
+            ))}
           </div>
         );
       }
@@ -280,20 +275,15 @@ const Visualizer = ({ visual }) => {
         const containerClass = getContainerSizeClass(v2);
 
         return (
-          <div className="flex flex-col items-center gap-6">
-            <div className="flex flex-wrap justify-center gap-4">
-              {Array.from({ length: groupCount }).map((_, i) => (
-                <div key={i} className="flex flex-col items-center gap-2">
-                  <div className={`flex flex-wrap justify-center ${containerClass} p-4 bg-amber-100 border-4 border-amber-600 rounded-lg min-w-[100px]`}>
-                    {renderApples(v2)}
-                  </div>
-                  <div className="text-2xl font-bold text-gray-700">{v2}</div>
+          <div className="flex flex-wrap justify-center gap-4">
+            {Array.from({ length: groupCount }).map((_, i) => (
+              <div key={i} className="flex flex-col items-center gap-2">
+                <div className={`flex flex-wrap justify-center ${containerClass} p-4 bg-amber-100 border-4 border-amber-600 rounded-lg min-w-[100px]`}>
+                  {renderApples(v2)}
                 </div>
-              ))}
-            </div>
-            <div className="text-3xl font-bold text-emerald-600">
-              {v1} divided into groups of {v2} = {groupCount} groups
-            </div>
+                <div className="text-2xl font-bold text-gray-700">{v2}</div>
+              </div>
+            ))}
           </div>
         );
       }
@@ -543,23 +533,20 @@ const FlashcardApp = () => {
                     hover:scale-105 active:scale-95 border-4 ${currentModeConfig?.borderClass}
                     ${isFlipping ? 'flip-animation' : ''}`}
                 >
-                  <div className="text-center">
-                    <div className="text-8xl font-bold mb-6"
-                      style={{ color: `var(--${currentModeConfig?.color}-600)` }}>
-                      {isFlipped ? currentFact.answer : currentFact.question}
-                    </div>
-                    <div className="text-2xl text-gray-500">
-                      {isFlipped ? 'Tap to see question' : 'Tap to reveal answer'}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Visual Representation */}
-                {showVisual && (
-                  <div className={isFlipping ? 'flip-animation' : ''}>
+                  {showVisual ? (
                     <Visualizer visual={currentFact.visual} />
-                  </div>
-                )}
+                  ) : (
+                    <div className="text-center">
+                      <div className="text-8xl font-bold mb-6"
+                        style={{ color: `var(--${currentModeConfig?.color}-600)` }}>
+                        {isFlipped ? currentFact.answer : currentFact.question}
+                      </div>
+                      <div className="text-2xl text-gray-500">
+                        {isFlipped ? 'Tap to see question' : 'Tap to reveal answer'}
+                      </div>
+                    </div>
+                  )}
+                </div>
 
                 {/* Action Bar - matching original design */}
                 <div className="w-full mt-6 flex justify-between items-center gap-4 px-2">
