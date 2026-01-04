@@ -308,27 +308,16 @@ const FlashcardApp = () => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [showVisual, setShowVisual] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(true);
-  const [isShuffled, setIsShuffled] = useState(false);
   const { speak, stop } = useSpeech();
-
-  // Shuffle array helper function
-  const shuffleArray = (array) => {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-  };
 
   // Generate deck when mode changes
   useEffect(() => {
     const newDeck = generateDeck(mode);
-    setDeck(isShuffled ? shuffleArray(newDeck) : newDeck);
+    setDeck(newDeck);
     setCurrentIndex(0);
     setIsFlipped(false);
     setShowVisual(false);
-  }, [mode, isShuffled]);
+  }, [mode]);
 
   // Helper function to convert question to speech-friendly text
   const getSpokenQuestion = (fact) => {
@@ -392,10 +381,6 @@ const FlashcardApp = () => {
       const fact = deck[currentIndex];
       speak(`${getSpokenQuestion(fact)} equals ${fact.answer}`);
     }
-  };
-
-  const toggleShuffle = () => {
-    setIsShuffled(!isShuffled);
   };
 
   const currentFact = deck[currentIndex];
@@ -564,19 +549,6 @@ const FlashcardApp = () => {
 
                 {/* Navigation Buttons */}
                 <div className="flex flex-wrap gap-4 justify-center">
-                  <button
-                    onClick={toggleShuffle}
-                    className={`flex items-center gap-2 px-8 py-4 rounded-lg font-semibold
-                      text-lg transition-colors transform hover:scale-105 ${
-                      isShuffled
-                        ? 'bg-purple-600 text-white hover:bg-purple-700'
-                        : 'bg-purple-100 text-purple-700 hover:bg-purple-200'
-                    }`}
-                  >
-                    <span className="text-2xl">🔀</span>
-                    {isShuffled ? 'Shuffled' : 'Shuffle'}
-                  </button>
-
                   <button
                     onClick={handleRestart}
                     className="flex items-center gap-2 px-8 py-4 bg-gray-600 text-white
