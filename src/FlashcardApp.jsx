@@ -347,7 +347,7 @@ const FlashcardApp = () => {
     setShowVisual(!showVisual);
     if (!showVisual && audioEnabled && deck[currentIndex]) {
       const fact = deck[currentIndex];
-      speak(`Visual representation showing ${fact.question} equals ${fact.answer}`);
+      speak(`${fact.question} equals ${fact.answer}`);
     }
   };
 
