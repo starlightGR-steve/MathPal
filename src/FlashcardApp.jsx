@@ -393,7 +393,26 @@ const FlashcardApp = () => {
       setIsFlipping(false);
       if (!showVisual && audioEnabled && deck[currentIndex]) {
         const fact = deck[currentIndex];
-        speak(`${getSpokenQuestion(fact)} equals ${fact.answer}`);
+        const visual = fact.visual;
+        let narration = '';
+
+        switch(visual.type) {
+          case 'add':
+            narration = `${visual.v1} apple${visual.v1 !== 1 ? 's' : ''} plus ${visual.v2} apple${visual.v2 !== 1 ? 's' : ''} equals ${visual.v1 + visual.v2} apple${visual.v1 + visual.v2 !== 1 ? 's' : ''}`;
+            break;
+          case 'subtract':
+            narration = `Start with ${visual.v1}, take away ${visual.v2} equals ${visual.v1 - visual.v2} left`;
+            break;
+          case 'multiply':
+            narration = `${visual.v1} basket${visual.v1 !== 1 ? 's' : ''} times ${visual.v2} apple${visual.v2 !== 1 ? 's' : ''} equals ${visual.v1 * visual.v2} apple${visual.v1 * visual.v2 !== 1 ? 's' : ''}`;
+            break;
+          case 'divide':
+            const result = visual.v1 / visual.v2;
+            narration = `${visual.v1} apples divided into groups of ${visual.v2} equals ${result} group${result !== 1 ? 's' : ''}`;
+            break;
+        }
+
+        speak(narration);
       }
     }, 300); // Half of animation time
   };
