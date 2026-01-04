@@ -554,7 +554,7 @@ const FlashcardApp = () => {
                         : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
                     }`}
                   >
-                    <span className="text-2xl">🎨</span>
+                    <span className="text-2xl">📊</span>
                     {showVisual ? 'Hide Visualization' : 'Visualize Math'}
                   </button>
                 </div>
