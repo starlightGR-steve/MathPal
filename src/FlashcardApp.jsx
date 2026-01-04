@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   Plus, Minus, X, Divide, Grid3x3, Square, Volume2,
-  VolumeX, RotateCcw, ChevronRight, Eye, EyeOff
+  VolumeX, RotateCcw, ChevronRight, Eye, EyeOff, Shuffle
 } from 'lucide-react';
 
 // Custom hook for text-to-speech
@@ -12,8 +12,27 @@ const useSpeech = () => {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.9;
-      utterance.pitch = 1.1;
+
+      // Wait for voices to load and select a more natural voice
+      const voices = window.speechSynthesis.getVoices();
+
+      // Try to find a high-quality English voice
+      const preferredVoice = voices.find(voice =>
+        voice.lang.startsWith('en') &&
+        (voice.name.includes('Google') ||
+         voice.name.includes('Microsoft') ||
+         voice.name.includes('Samantha') ||
+         voice.name.includes('Natural') ||
+         voice.name.includes('Premium'))
+      ) || voices.find(voice => voice.lang.startsWith('en'));
+
+      if (preferredVoice) {
+        utterance.voice = preferredVoice;
+      }
+
+      utterance.rate = 0.85; // Slightly slower for clarity
+      utterance.pitch = 1.0; // Natural pitch
+      utterance.volume = 1.0;
       utterance.onstart = () => setIsSpeaking(true);
       utterance.onend = () => setIsSpeaking(false);
       utterance.onerror = () => setIsSpeaking(false);
@@ -293,16 +312,27 @@ const FlashcardApp = () => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [showVisual, setShowVisual] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(true);
+  const [isShuffled, setIsShuffled] = useState(false);
   const { speak, stop } = useSpeech();
+
+  // Shuffle array helper function
+  const shuffleArray = (array) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
 
   // Generate deck when mode changes
   useEffect(() => {
     const newDeck = generateDeck(mode);
-    setDeck(newDeck);
+    setDeck(isShuffled ? shuffleArray(newDeck) : newDeck);
     setCurrentIndex(0);
     setIsFlipped(false);
     setShowVisual(false);
-  }, [mode]);
+  }, [mode, isShuffled]);
 
   // Helper function to convert question to speech-friendly text
   const getSpokenQuestion = (fact) => {
@@ -366,6 +396,10 @@ const FlashcardApp = () => {
       const fact = deck[currentIndex];
       speak(`${getSpokenQuestion(fact)} equals ${fact.answer}`);
     }
+  };
+
+  const toggleShuffle = () => {
+    setIsShuffled(!isShuffled);
   };
 
   const currentFact = deck[currentIndex];
@@ -534,7 +568,20 @@ const FlashcardApp = () => {
                 <VisualRepresentation fact={currentFact} isVisible={showVisual} />
 
                 {/* Navigation Buttons */}
-                <div className="flex gap-4 justify-center">
+                <div className="flex flex-wrap gap-4 justify-center">
+                  <button
+                    onClick={toggleShuffle}
+                    className={`flex items-center gap-2 px-8 py-4 rounded-lg font-semibold
+                      text-lg transition-colors transform hover:scale-105 ${
+                      isShuffled
+                        ? 'bg-purple-600 text-white hover:bg-purple-700'
+                        : 'bg-purple-100 text-purple-700 hover:bg-purple-200'
+                    }`}
+                  >
+                    <Shuffle className="w-6 h-6" />
+                    {isShuffled ? 'Shuffled' : 'Shuffle'}
+                  </button>
+
                   <button
                     onClick={handleRestart}
                     className="flex items-center gap-2 px-8 py-4 bg-gray-600 text-white
