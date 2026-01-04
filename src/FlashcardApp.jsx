@@ -1,8 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import {
-  Plus, Minus, X, Divide, Grid3x3, Square, Volume2,
-  VolumeX, RotateCcw, ChevronRight, BarChart3, Shuffle
-} from 'lucide-react';
 
 // Custom hook for text-to-speech
 const useSpeech = () => {
@@ -409,7 +405,7 @@ const FlashcardApp = () => {
     {
       id: 'addition',
       name: 'Addition',
-      icon: Plus,
+      emoji: '➕',
       activeClass: 'bg-emerald-600 text-white shadow-lg',
       inactiveClass: 'bg-gray-100 text-gray-700 hover:bg-emerald-50',
       progressClass: 'bg-emerald-600',
@@ -421,7 +417,7 @@ const FlashcardApp = () => {
     {
       id: 'addSub',
       name: 'Add/Sub Mix',
-      icon: Minus,
+      emoji: '➕➖',
       activeClass: 'bg-emerald-600 text-white shadow-lg',
       inactiveClass: 'bg-gray-100 text-gray-700 hover:bg-emerald-50',
       progressClass: 'bg-emerald-600',
@@ -433,7 +429,7 @@ const FlashcardApp = () => {
     {
       id: 'multiplication',
       name: 'Multiplication',
-      icon: X,
+      emoji: '✖️',
       activeClass: 'bg-emerald-600 text-white shadow-lg',
       inactiveClass: 'bg-gray-100 text-gray-700 hover:bg-emerald-50',
       progressClass: 'bg-emerald-600',
@@ -445,7 +441,7 @@ const FlashcardApp = () => {
     {
       id: 'multDiv',
       name: 'Mult/Div Mix',
-      icon: Divide,
+      emoji: '✖️➗',
       activeClass: 'bg-emerald-600 text-white shadow-lg',
       inactiveClass: 'bg-gray-100 text-gray-700 hover:bg-emerald-50',
       progressClass: 'bg-emerald-600',
@@ -467,17 +463,16 @@ const FlashcardApp = () => {
             {/* Mode Selection */}
             <div className="flex flex-wrap gap-2">
               {modes.map((m) => {
-                const Icon = m.icon;
                 return (
                   <button
                     key={m.id}
                     onClick={() => setMode(m.id)}
-                    className={`flex items-center gap-2 px-4 py-3 rounded-lg font-semibold
+                    className={`flex items-center gap-2 px-4 py-3 rounded-lg font-semibold text-xl
                       transition-all transform hover:scale-105 ${
                       mode === m.id ? m.activeClass : m.inactiveClass
                     }`}
                   >
-                    <Icon className="w-5 h-5" />
+                    <span className="text-2xl">{m.emoji}</span>
                     <span className="hidden sm:inline">{m.name}</span>
                   </button>
                 );
@@ -488,20 +483,20 @@ const FlashcardApp = () => {
             <div className="flex gap-2">
               <button
                 onClick={() => setViewMode(viewMode === 'card' ? 'grid' : 'card')}
-                className="p-3 bg-purple-100 hover:bg-purple-200 rounded-lg transition-colors"
+                className="p-3 bg-purple-100 hover:bg-purple-200 rounded-lg transition-colors text-2xl"
                 title={viewMode === 'card' ? 'Grid View' : 'Card View'}
               >
-                {viewMode === 'card' ? <Grid3x3 className="w-6 h-6" /> : <Square className="w-6 h-6" />}
+                {viewMode === 'card' ? '📊' : '🃏'}
               </button>
 
               <button
                 onClick={() => setAudioEnabled(!audioEnabled)}
-                className={`p-3 rounded-lg transition-colors ${
+                className={`p-3 rounded-lg transition-colors text-2xl ${
                   audioEnabled ? 'bg-green-100 hover:bg-green-200' : 'bg-gray-100 hover:bg-gray-200'
                 }`}
                 title={audioEnabled ? 'Disable Audio' : 'Enable Audio'}
               >
-                {audioEnabled ? <Volume2 className="w-6 h-6" /> : <VolumeX className="w-6 h-6" />}
+                {audioEnabled ? '🔊' : '🔇'}
               </button>
             </div>
           </div>
@@ -559,7 +554,7 @@ const FlashcardApp = () => {
                         : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
                     }`}
                   >
-                    <BarChart3 className="w-6 h-6" />
+                    <span className="text-2xl">🎨</span>
                     {showVisual ? 'Hide Visualization' : 'Visualize Math'}
                   </button>
                 </div>
@@ -578,7 +573,7 @@ const FlashcardApp = () => {
                         : 'bg-purple-100 text-purple-700 hover:bg-purple-200'
                     }`}
                   >
-                    <Shuffle className="w-6 h-6" />
+                    <span className="text-2xl">🔀</span>
                     {isShuffled ? 'Shuffled' : 'Shuffle'}
                   </button>
 
@@ -588,7 +583,7 @@ const FlashcardApp = () => {
                       rounded-lg font-semibold text-lg hover:bg-gray-700 transition-colors
                       transform hover:scale-105"
                   >
-                    <RotateCcw className="w-6 h-6" />
+                    <span className="text-2xl">🔄</span>
                     Restart
                   </button>
 
@@ -603,7 +598,7 @@ const FlashcardApp = () => {
                     }`}
                   >
                     Next
-                    <ChevronRight className="w-6 h-6" />
+                    <span className="text-2xl">➡️</span>
                   </button>
                 </div>
               </div>
