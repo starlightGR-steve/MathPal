@@ -355,10 +355,54 @@ const FlashcardApp = () => {
   const progress = deck.length > 0 ? ((currentIndex + 1) / deck.length) * 100 : 0;
 
   const modes = [
-    { id: 'addition', name: 'Addition', icon: Plus, color: 'blue' },
-    { id: 'addSub', name: 'Add/Sub Mix', icon: Minus, color: 'indigo' },
-    { id: 'multiplication', name: 'Multiplication', icon: X, color: 'emerald' },
-    { id: 'multDiv', name: 'Mult/Div Mix', icon: Divide, color: 'teal' }
+    {
+      id: 'addition',
+      name: 'Addition',
+      icon: Plus,
+      activeClass: 'bg-blue-600 text-white shadow-lg',
+      inactiveClass: 'bg-gray-100 text-gray-700 hover:bg-blue-50',
+      progressClass: 'bg-blue-600',
+      borderClass: 'border-blue-300',
+      nextButtonClass: 'bg-blue-600 text-white hover:bg-blue-700',
+      gridActiveClass: 'bg-blue-600 text-white border-blue-700 shadow-lg',
+      gridInactiveClass: 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-blue-50'
+    },
+    {
+      id: 'addSub',
+      name: 'Add/Sub Mix',
+      icon: Minus,
+      activeClass: 'bg-indigo-600 text-white shadow-lg',
+      inactiveClass: 'bg-gray-100 text-gray-700 hover:bg-indigo-50',
+      progressClass: 'bg-indigo-600',
+      borderClass: 'border-indigo-300',
+      nextButtonClass: 'bg-indigo-600 text-white hover:bg-indigo-700',
+      gridActiveClass: 'bg-indigo-600 text-white border-indigo-700 shadow-lg',
+      gridInactiveClass: 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-indigo-50'
+    },
+    {
+      id: 'multiplication',
+      name: 'Multiplication',
+      icon: X,
+      activeClass: 'bg-emerald-600 text-white shadow-lg',
+      inactiveClass: 'bg-gray-100 text-gray-700 hover:bg-emerald-50',
+      progressClass: 'bg-emerald-600',
+      borderClass: 'border-emerald-300',
+      nextButtonClass: 'bg-emerald-600 text-white hover:bg-emerald-700',
+      gridActiveClass: 'bg-emerald-600 text-white border-emerald-700 shadow-lg',
+      gridInactiveClass: 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-emerald-50'
+    },
+    {
+      id: 'multDiv',
+      name: 'Mult/Div Mix',
+      icon: Divide,
+      activeClass: 'bg-teal-600 text-white shadow-lg',
+      inactiveClass: 'bg-gray-100 text-gray-700 hover:bg-teal-50',
+      progressClass: 'bg-teal-600',
+      borderClass: 'border-teal-300',
+      nextButtonClass: 'bg-teal-600 text-white hover:bg-teal-700',
+      gridActiveClass: 'bg-teal-600 text-white border-teal-700 shadow-lg',
+      gridInactiveClass: 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-teal-50'
+    }
   ];
 
   const currentModeConfig = modes.find(m => m.id === mode);
@@ -379,9 +423,7 @@ const FlashcardApp = () => {
                     onClick={() => setMode(m.id)}
                     className={`flex items-center gap-2 px-4 py-3 rounded-lg font-semibold
                       transition-all transform hover:scale-105 ${
-                      mode === m.id
-                        ? `bg-${m.color}-500 text-white shadow-lg`
-                        : `bg-gray-100 text-gray-700 hover:bg-${m.color}-100`
+                      mode === m.id ? m.activeClass : m.inactiveClass
                     }`}
                   >
                     <Icon className="w-5 h-5" />
@@ -429,7 +471,7 @@ const FlashcardApp = () => {
               </div>
               <div className="w-full bg-gray-200 rounded-full h-3">
                 <div
-                  className={`h-3 rounded-full transition-all duration-300 bg-${currentModeConfig?.color}-500`}
+                  className={`h-3 rounded-full transition-all duration-300 ${currentModeConfig?.progressClass}`}
                   style={{ width: `${progress}%` }}
                 ></div>
               </div>
@@ -442,7 +484,7 @@ const FlashcardApp = () => {
                   onClick={handleCardClick}
                   className={`bg-white rounded-2xl shadow-2xl p-12 min-h-[400px] flex items-center
                     justify-center cursor-pointer transform transition-all duration-300
-                    hover:scale-105 active:scale-95 border-4 border-${currentModeConfig?.color}-200`}
+                    hover:scale-105 active:scale-95 border-4 ${currentModeConfig?.borderClass}`}
                 >
                   <div className="text-center">
                     <div className="text-8xl font-bold mb-6"
@@ -493,7 +535,7 @@ const FlashcardApp = () => {
                       text-lg transition-colors transform hover:scale-105 ${
                       currentIndex >= deck.length - 1
                         ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        : `bg-${currentModeConfig?.color}-500 text-white hover:bg-${currentModeConfig?.color}-600`
+                        : currentModeConfig?.nextButtonClass
                     }`}
                   >
                     Next
@@ -517,8 +559,8 @@ const FlashcardApp = () => {
                   className={`p-6 rounded-lg font-bold text-2xl transition-all transform
                     hover:scale-110 hover:shadow-xl border-2 ${
                     index === currentIndex
-                      ? `bg-${currentModeConfig?.color}-500 text-white border-${currentModeConfig?.color}-600 shadow-lg`
-                      : `bg-gray-50 text-gray-700 border-gray-200 hover:bg-${currentModeConfig?.color}-100`
+                      ? currentModeConfig?.gridActiveClass
+                      : currentModeConfig?.gridInactiveClass
                   }`}
                 >
                   {fact.question}
