@@ -351,14 +351,23 @@ const FlashcardApp = () => {
   }, [currentIndex, isFlipped, audioEnabled, deck, speak]);
 
   const handleCardClick = () => {
-    setIsFlipped(!isFlipped);
+    if (showVisual) return; // Don't flip when showing visual
+    if (!isFlipped) {
+      setIsFlipped(true);
+    }
   };
 
   const handleNext = () => {
     if (currentIndex < deck.length - 1) {
-      setCurrentIndex(currentIndex + 1);
       setIsFlipped(false);
       setShowVisual(false);
+      setCurrentIndex(currentIndex + 1);
+    } else {
+      if (window.confirm("You finished the set! Restart?")) {
+        setCurrentIndex(0);
+        setIsFlipped(false);
+        setShowVisual(false);
+      }
     }
   };
 
@@ -528,50 +537,47 @@ const FlashcardApp = () => {
                   </div>
                 </div>
 
-                {/* Visual Toggle Button */}
-                <div className="flex justify-center">
-                  <button
-                    onClick={toggleVisual}
-                    className={`flex items-center gap-2 px-6 py-4 rounded-lg font-semibold
-                      text-lg transition-all transform hover:scale-105 ${
-                      showVisual
-                        ? 'bg-orange-500 text-white shadow-lg'
-                        : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
-                    }`}
-                  >
-                    <span className="text-2xl">📊</span>
-                    {showVisual ? 'Hide Visualization' : 'Visualize Math'}
-                  </button>
-                </div>
-
                 {/* Visual Representation */}
                 <VisualRepresentation fact={currentFact} isVisible={showVisual} />
 
-                {/* Navigation Buttons */}
-                <div className="flex flex-wrap gap-4 justify-center">
-                  <button
-                    onClick={handleRestart}
-                    className="flex items-center gap-2 px-8 py-4 bg-gray-600 text-white
-                      rounded-lg font-semibold text-lg hover:bg-gray-700 transition-colors
-                      transform hover:scale-105"
-                  >
-                    <span className="text-2xl">🔄</span>
-                    Restart
-                  </button>
+                {/* Action Bar - matching original design */}
+                <div className="w-full mt-6 flex justify-between items-center gap-4 px-2">
 
+                  {/* Visualize Toggle */}
                   <button
-                    onClick={handleNext}
-                    disabled={currentIndex >= deck.length - 1}
-                    className={`flex items-center gap-2 px-8 py-4 rounded-lg font-semibold
-                      text-lg transition-colors transform hover:scale-105 ${
-                      currentIndex >= deck.length - 1
-                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        : currentModeConfig?.nextButtonClass
+                    onClick={toggleVisual}
+                    className={`flex items-center gap-2 px-4 md:px-6 py-3 rounded-xl font-bold transition-all shadow-md ${
+                      showVisual
+                        ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
+                        : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
                     }`}
                   >
-                    Next
-                    <span className="text-2xl">➡️</span>
+                    {showVisual ? (
+                      <>
+                        <span className="text-2xl">🔢</span>
+                        <span className="hidden md:inline">Show Numbers</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-2xl">📊</span>
+                        <span className="hidden md:inline">Visualize Math</span>
+                      </>
+                    )}
                   </button>
+
+                  {/* Next Button - only shows after flip or visualize */}
+                  <div className="h-14 flex-1 flex justify-end">
+                    {(isFlipped || showVisual) ? (
+                      <button
+                        onClick={handleNext}
+                        className="flex items-center gap-2 bg-emerald-600 text-white px-8 py-3 rounded-xl text-lg font-bold shadow-lg hover:bg-emerald-700 hover:scale-105 transition-all"
+                      >
+                        Next <span className="text-2xl">➡️</span>
+                      </button>
+                    ) : (
+                      <div className="px-8 py-3 text-slate-400 italic">Thinking...</div>
+                    )}
+                  </div>
                 </div>
               </div>
             )}
