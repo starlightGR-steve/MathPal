@@ -60,7 +60,7 @@ const generateDeck = (mode) => {
             answer: a + b,
             operands: [a, b],
             operation: 'add',
-            visualType: 'add'
+            visual: { type: 'add', v1: a, v2: b }
           });
         }
       }
@@ -75,7 +75,7 @@ const generateDeck = (mode) => {
             answer: a + b,
             operands: [a, b],
             operation: 'add',
-            visualType: 'add'
+            visual: { type: 'add', v1: a, v2: b }
           });
         }
       }
@@ -89,7 +89,7 @@ const generateDeck = (mode) => {
               answer: result,
               operands: [sum, sub],
               operation: 'subtract',
-              visualType: 'subtract'
+              visual: { type: 'subtract', v1: sum, v2: sub }
             });
           }
         }
@@ -105,7 +105,7 @@ const generateDeck = (mode) => {
             answer: a * b,
             operands: [a, b],
             operation: 'multiply',
-            visualType: 'multiply'
+            visual: { type: 'multiply', v1: a, v2: b }
           });
         }
       }
@@ -120,7 +120,7 @@ const generateDeck = (mode) => {
             answer: a * b,
             operands: [a, b],
             operation: 'multiply',
-            visualType: 'multiply'
+            visual: { type: 'multiply', v1: a, v2: b }
           });
         }
       }
@@ -133,7 +133,7 @@ const generateDeck = (mode) => {
             answer: a,
             operands: [dividend, b],
             operation: 'divide',
-            visualType: 'divide'
+            visual: { type: 'divide', v1: dividend, v2: b }
           });
         }
       }
@@ -143,144 +143,156 @@ const generateDeck = (mode) => {
   return facts;
 };
 
-// Visual representation component
-const VisualRepresentation = ({ fact, isVisible }) => {
-  if (!isVisible) return null;
+// Visual representation component - matching original design with emoji apples
+const Visualizer = ({ visual }) => {
+  if (!visual) return null;
 
-  const { visualType, operands, answer } = fact;
+  const { type, v1, v2 } = visual;
 
-  // Calculate apple size based on total count
-  const getAppleSize = (totalCount) => {
-    if (totalCount <= 10) return 'w-12 h-12';
-    if (totalCount <= 20) return 'w-10 h-10';
-    if (totalCount <= 40) return 'w-8 h-8';
-    if (totalCount <= 60) return 'w-6 h-6';
-    return 'w-5 h-5';
+  // Calculate apple size classes based on total count
+  const getAppleSizeClass = (totalCount) => {
+    if (totalCount <= 10) return 'text-5xl';
+    if (totalCount <= 20) return 'text-4xl';
+    if (totalCount <= 40) return 'text-3xl';
+    if (totalCount <= 60) return 'text-2xl';
+    return 'text-xl';
   };
 
-  const Apple = ({ className = '', crossed = false }) => (
-    <div className={`relative ${className}`}>
-      <div className={`w-full h-full rounded-full ${crossed ? 'bg-red-300' : 'bg-red-500'}
-        flex items-center justify-center text-white font-bold relative`}>
-        {crossed && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-full h-0.5 bg-gray-800 rotate-45 absolute"></div>
-            <div className="w-full h-0.5 bg-gray-800 -rotate-45 absolute"></div>
-          </div>
-        )}
-      </div>
-      <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-green-600 rounded-sm"></div>
-    </div>
-  );
+  const getContainerSizeClass = (totalCount) => {
+    if (totalCount <= 10) return 'gap-3';
+    if (totalCount <= 20) return 'gap-2';
+    return 'gap-1';
+  };
 
-  const Basket = ({ children, label }) => (
-    <div className="flex flex-col items-center gap-2">
-      <div className="relative">
-        <div className="border-4 border-amber-700 rounded-lg p-3 bg-amber-100 min-w-[80px]
-          min-h-[80px] flex flex-wrap gap-1 items-center justify-center">
-          {children}
-        </div>
-      </div>
-      {label && <div className="text-2xl font-bold text-gray-700">{label}</div>}
-    </div>
-  );
+  const renderApples = (count, crossed = false) => {
+    const sizeClass = getAppleSizeClass(count);
+    return Array.from({ length: count }).map((_, i) => (
+      <span key={i} className={`${sizeClass} ${crossed ? 'opacity-40 line-through' : ''}`}>
+        🍎
+      </span>
+    ));
+  };
 
   const renderVisualization = () => {
-    switch(visualType) {
+    switch(type) {
       case 'add': {
-        const [a, b] = operands;
-        const appleSize = getAppleSize(a + b);
+        const totalCount = v1 + v2;
+        const containerClass = getContainerSizeClass(totalCount);
 
         return (
-          <div className="flex flex-wrap gap-8 items-center justify-center">
-            <Basket label={a}>
-              {Array.from({ length: a }).map((_, i) => (
-                <Apple key={i} className={appleSize} />
-              ))}
-            </Basket>
-            <div className="text-6xl font-bold text-blue-600">+</div>
-            <Basket label={b}>
-              {Array.from({ length: b }).map((_, i) => (
-                <Apple key={i} className={appleSize} />
-              ))}
-            </Basket>
-            <div className="text-6xl font-bold text-gray-600">=</div>
-            <Basket label={answer}>
-              {Array.from({ length: answer }).map((_, i) => (
-                <Apple key={i} className={appleSize} />
-              ))}
-            </Basket>
+          <div className="flex flex-col items-center gap-6">
+            <div className="flex flex-wrap items-center justify-center gap-8">
+              {/* First group */}
+              <div className="flex flex-col items-center gap-2">
+                <div className={`flex flex-wrap justify-center ${containerClass} p-4 bg-amber-100 border-4 border-amber-600 rounded-lg min-w-[120px]`}>
+                  {renderApples(v1)}
+                </div>
+                <div className="text-3xl font-bold text-gray-700">{v1}</div>
+              </div>
+
+              <div className="text-5xl font-bold text-emerald-600">+</div>
+
+              {/* Second group */}
+              <div className="flex flex-col items-center gap-2">
+                <div className={`flex flex-wrap justify-center ${containerClass} p-4 bg-amber-100 border-4 border-amber-600 rounded-lg min-w-[120px]`}>
+                  {renderApples(v2)}
+                </div>
+                <div className="text-3xl font-bold text-gray-700">{v2}</div>
+              </div>
+
+              <div className="text-5xl font-bold text-gray-600">=</div>
+
+              {/* Result group */}
+              <div className="flex flex-col items-center gap-2">
+                <div className={`flex flex-wrap justify-center ${containerClass} p-4 bg-amber-100 border-4 border-amber-600 rounded-lg min-w-[120px]`}>
+                  {renderApples(totalCount)}
+                </div>
+                <div className="text-3xl font-bold text-gray-700">{totalCount}</div>
+              </div>
+            </div>
           </div>
         );
       }
 
       case 'subtract': {
-        const [total, sub] = operands;
-        const appleSize = getAppleSize(total);
+        const containerClass = getContainerSizeClass(v1);
 
         return (
-          <div className="flex flex-wrap gap-8 items-center justify-center">
-            <Basket label={total}>
-              {Array.from({ length: total }).map((_, i) => (
-                <Apple key={i} className={appleSize} crossed={i < sub} />
-              ))}
-            </Basket>
-            <div className="text-6xl font-bold text-indigo-600">−</div>
-            <Basket label={sub}>
-              {Array.from({ length: sub }).map((_, i) => (
-                <Apple key={i} className={appleSize} crossed />
-              ))}
-            </Basket>
-            <div className="text-6xl font-bold text-gray-600">=</div>
-            <Basket label={answer}>
-              {Array.from({ length: answer }).map((_, i) => (
-                <Apple key={i} className={appleSize} />
-              ))}
-            </Basket>
+          <div className="flex flex-col items-center gap-6">
+            <div className="flex flex-wrap items-center justify-center gap-8">
+              {/* Start with total */}
+              <div className="flex flex-col items-center gap-2">
+                <div className={`flex flex-wrap justify-center ${containerClass} p-4 bg-amber-100 border-4 border-amber-600 rounded-lg min-w-[120px]`}>
+                  {renderApples(v2).concat(renderApples(v1 - v2, true))}
+                </div>
+                <div className="text-3xl font-bold text-gray-700">{v1}</div>
+              </div>
+
+              <div className="text-5xl font-bold text-emerald-600">−</div>
+
+              {/* Subtract group */}
+              <div className="flex flex-col items-center gap-2">
+                <div className={`flex flex-wrap justify-center ${containerClass} p-4 bg-amber-100 border-4 border-amber-600 rounded-lg min-w-[120px]`}>
+                  {renderApples(v2, true)}
+                </div>
+                <div className="text-3xl font-bold text-gray-700">{v2}</div>
+              </div>
+
+              <div className="text-5xl font-bold text-gray-600">=</div>
+
+              {/* Result */}
+              <div className="flex flex-col items-center gap-2">
+                <div className={`flex flex-wrap justify-center ${containerClass} p-4 bg-amber-100 border-4 border-amber-600 rounded-lg min-w-[120px]`}>
+                  {renderApples(v1 - v2)}
+                </div>
+                <div className="text-3xl font-bold text-gray-700">{v1 - v2}</div>
+              </div>
+            </div>
           </div>
         );
       }
 
       case 'multiply': {
-        const [groups, perGroup] = operands;
-        const appleSize = getAppleSize(groups * perGroup);
+        const totalCount = v1 * v2;
+        const containerClass = getContainerSizeClass(v2);
 
         return (
-          <div className="flex flex-col gap-6 items-center">
-            <div className="flex flex-wrap gap-4 items-center justify-center">
-              {Array.from({ length: groups }).map((_, i) => (
-                <Basket key={i} label={perGroup}>
-                  {Array.from({ length: perGroup }).map((_, j) => (
-                    <Apple key={j} className={appleSize} />
-                  ))}
-                </Basket>
+          <div className="flex flex-col items-center gap-6">
+            <div className="flex flex-wrap justify-center gap-4">
+              {Array.from({ length: v1 }).map((_, i) => (
+                <div key={i} className="flex flex-col items-center gap-2">
+                  <div className={`flex flex-wrap justify-center ${containerClass} p-4 bg-amber-100 border-4 border-amber-600 rounded-lg min-w-[100px]`}>
+                    {renderApples(v2)}
+                  </div>
+                  <div className="text-2xl font-bold text-gray-700">{v2}</div>
+                </div>
               ))}
             </div>
-            <div className="text-4xl font-bold text-emerald-600">
-              {groups} groups of {perGroup} = {answer}
+            <div className="text-3xl font-bold text-emerald-600">
+              {v1} groups of {v2} = {totalCount}
             </div>
           </div>
         );
       }
 
       case 'divide': {
-        const [total, divisor] = operands;
-        const groupSize = answer;
-        const appleSize = getAppleSize(total);
+        const groupCount = v1 / v2;
+        const containerClass = getContainerSizeClass(v2);
 
         return (
-          <div className="flex flex-col gap-6 items-center">
-            <div className="flex flex-wrap gap-4 items-center justify-center">
-              {Array.from({ length: groupSize }).map((_, i) => (
-                <Basket key={i} label={divisor}>
-                  {Array.from({ length: divisor }).map((_, j) => (
-                    <Apple key={j} className={appleSize} />
-                  ))}
-                </Basket>
+          <div className="flex flex-col items-center gap-6">
+            <div className="flex flex-wrap justify-center gap-4">
+              {Array.from({ length: groupCount }).map((_, i) => (
+                <div key={i} className="flex flex-col items-center gap-2">
+                  <div className={`flex flex-wrap justify-center ${containerClass} p-4 bg-amber-100 border-4 border-amber-600 rounded-lg min-w-[100px]`}>
+                    {renderApples(v2)}
+                  </div>
+                  <div className="text-2xl font-bold text-gray-700">{v2}</div>
+                </div>
               ))}
             </div>
-            <div className="text-4xl font-bold text-teal-600">
-              {total} divided into groups of {divisor} = {groupSize} groups
+            <div className="text-3xl font-bold text-emerald-600">
+              {v1} divided into groups of {v2} = {groupCount} groups
             </div>
           </div>
         );
@@ -292,8 +304,7 @@ const VisualRepresentation = ({ fact, isVisible }) => {
   };
 
   return (
-    <div className="w-full py-8 px-4 bg-gradient-to-b from-blue-50 to-white rounded-xl
-      border-2 border-blue-200 overflow-auto">
+    <div className="w-full py-8 px-4 bg-gradient-to-b from-blue-50 to-white rounded-xl border-2 border-blue-200 overflow-auto">
       {renderVisualization()}
     </div>
   );
@@ -308,6 +319,7 @@ const FlashcardApp = () => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [showVisual, setShowVisual] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(true);
+  const [isFlipping, setIsFlipping] = useState(false);
   const { speak, stop } = useSpeech();
 
   // Generate deck when mode changes
@@ -385,11 +397,15 @@ const FlashcardApp = () => {
   };
 
   const toggleVisual = () => {
-    setShowVisual(!showVisual);
-    if (!showVisual && audioEnabled && deck[currentIndex]) {
-      const fact = deck[currentIndex];
-      speak(`${getSpokenQuestion(fact)} equals ${fact.answer}`);
-    }
+    setIsFlipping(true);
+    setTimeout(() => {
+      setShowVisual(!showVisual);
+      setIsFlipping(false);
+      if (!showVisual && audioEnabled && deck[currentIndex]) {
+        const fact = deck[currentIndex];
+        speak(`${getSpokenQuestion(fact)} equals ${fact.answer}`);
+      }
+    }, 300); // Half of animation time
   };
 
   const currentFact = deck[currentIndex];
@@ -524,7 +540,8 @@ const FlashcardApp = () => {
                   onClick={handleCardClick}
                   className={`bg-white rounded-2xl shadow-2xl p-12 min-h-[400px] flex items-center
                     justify-center cursor-pointer transform transition-all duration-300
-                    hover:scale-105 active:scale-95 border-4 ${currentModeConfig?.borderClass}`}
+                    hover:scale-105 active:scale-95 border-4 ${currentModeConfig?.borderClass}
+                    ${isFlipping ? 'flip-animation' : ''}`}
                 >
                   <div className="text-center">
                     <div className="text-8xl font-bold mb-6"
@@ -538,7 +555,11 @@ const FlashcardApp = () => {
                 </div>
 
                 {/* Visual Representation */}
-                <VisualRepresentation fact={currentFact} isVisible={showVisual} />
+                {showVisual && (
+                  <div className={isFlipping ? 'flip-animation' : ''}>
+                    <Visualizer visual={currentFact.visual} />
+                  </div>
+                )}
 
                 {/* Action Bar - matching original design */}
                 <div className="w-full mt-6 flex justify-between items-center gap-4 px-2">
