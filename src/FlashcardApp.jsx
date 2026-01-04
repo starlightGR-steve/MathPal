@@ -359,25 +359,25 @@ const FlashcardApp = () => {
       id: 'addition',
       name: 'Addition',
       icon: Plus,
-      activeClass: 'bg-blue-600 text-white shadow-lg',
-      inactiveClass: 'bg-gray-100 text-gray-700 hover:bg-blue-50',
-      progressClass: 'bg-blue-600',
-      borderClass: 'border-blue-300',
-      nextButtonClass: 'bg-blue-600 text-white hover:bg-blue-700',
-      gridActiveClass: 'bg-blue-600 text-white border-blue-700 shadow-lg',
-      gridInactiveClass: 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-blue-50'
+      activeClass: 'bg-emerald-600 text-white shadow-lg',
+      inactiveClass: 'bg-gray-100 text-gray-700 hover:bg-emerald-50',
+      progressClass: 'bg-emerald-600',
+      borderClass: 'border-emerald-300',
+      nextButtonClass: 'bg-emerald-600 text-white hover:bg-emerald-700',
+      gridActiveClass: 'bg-emerald-600 text-white border-emerald-700 shadow-lg',
+      gridInactiveClass: 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-emerald-50'
     },
     {
       id: 'addSub',
       name: 'Add/Sub Mix',
       icon: Minus,
-      activeClass: 'bg-indigo-600 text-white shadow-lg',
-      inactiveClass: 'bg-gray-100 text-gray-700 hover:bg-indigo-50',
-      progressClass: 'bg-indigo-600',
-      borderClass: 'border-indigo-300',
-      nextButtonClass: 'bg-indigo-600 text-white hover:bg-indigo-700',
-      gridActiveClass: 'bg-indigo-600 text-white border-indigo-700 shadow-lg',
-      gridInactiveClass: 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-indigo-50'
+      activeClass: 'bg-emerald-600 text-white shadow-lg',
+      inactiveClass: 'bg-gray-100 text-gray-700 hover:bg-emerald-50',
+      progressClass: 'bg-emerald-600',
+      borderClass: 'border-emerald-300',
+      nextButtonClass: 'bg-emerald-600 text-white hover:bg-emerald-700',
+      gridActiveClass: 'bg-emerald-600 text-white border-emerald-700 shadow-lg',
+      gridInactiveClass: 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-emerald-50'
     },
     {
       id: 'multiplication',
@@ -395,13 +395,13 @@ const FlashcardApp = () => {
       id: 'multDiv',
       name: 'Mult/Div Mix',
       icon: Divide,
-      activeClass: 'bg-teal-600 text-white shadow-lg',
-      inactiveClass: 'bg-gray-100 text-gray-700 hover:bg-teal-50',
-      progressClass: 'bg-teal-600',
-      borderClass: 'border-teal-300',
-      nextButtonClass: 'bg-teal-600 text-white hover:bg-teal-700',
-      gridActiveClass: 'bg-teal-600 text-white border-teal-700 shadow-lg',
-      gridInactiveClass: 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-teal-50'
+      activeClass: 'bg-emerald-600 text-white shadow-lg',
+      inactiveClass: 'bg-gray-100 text-gray-700 hover:bg-emerald-50',
+      progressClass: 'bg-emerald-600',
+      borderClass: 'border-emerald-300',
+      nextButtonClass: 'bg-emerald-600 text-white hover:bg-emerald-700',
+      gridActiveClass: 'bg-emerald-600 text-white border-emerald-700 shadow-lg',
+      gridInactiveClass: 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-emerald-50'
     }
   ];
 
