@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   Plus, Minus, X, Divide, Grid3x3, Square, Volume2,
-  VolumeX, RotateCcw, ChevronRight, Eye, EyeOff, Shuffle
+  VolumeX, RotateCcw, ChevronRight, BarChart3, Shuffle
 } from 'lucide-react';
 
 // Custom hook for text-to-speech
@@ -559,8 +559,8 @@ const FlashcardApp = () => {
                         : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
                     }`}
                   >
-                    {showVisual ? <EyeOff className="w-6 h-6" /> : <Eye className="w-6 h-6" />}
-                    {showVisual ? 'Hide Pictures' : 'Show Pictures'}
+                    <BarChart3 className="w-6 h-6" />
+                    {showVisual ? 'Hide Visualization' : 'Visualize Math'}
                   </button>
                 </div>
 
